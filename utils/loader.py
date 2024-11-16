@@ -11,17 +11,9 @@ import torch
 
 
 def get_env_vars() -> None:
-    try:
-        import google.colab  # type: ignore
-
-        env = "colab"
-        google.colab.drive.mount("/content/drive")
-        data_path = "/content/drive/MyDrive/your_dataset_folder/"  # colab 사용시에는 여기에 개인 colab에 맞는 경로 입력해주세요.
-        return env, data_path
-    except ImportError:
-        env = "local"
-        data_path = os.path.join(os.curdir, "data")
-        return env, data_path
+    env = "local"
+    data_path = os.path.join(os.curdir, "data")
+    return env, data_path
 
 
 def download_dataset(data_path: str) -> None:
@@ -147,15 +139,6 @@ def get_dataset(
 
 
 def get_loaders() -> tuple[DataLoader, DataLoader, DataLoader]:
-    random_seed = 2024  # 시드(seed) 고정
-    torch.manual_seed(random_seed)
-    np.random.seed(random_seed)
-    random.seed(random_seed)
-    torch.backends.cudnn.deterministic = True
-    torch.backends.cudnn.benchmark = False
-
-    device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-
     env, data_path = get_env_vars()
 
     print(f"Running in {env} environment, data path is {data_path}")
