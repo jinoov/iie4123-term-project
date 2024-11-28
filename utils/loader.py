@@ -93,7 +93,7 @@ class CustomDataset(Dataset):
         self.transform: transforms.Compose
 
         # mode에 따라 다른 transform 적용
-        if mode != "train":
+        if mode == "train":
             self.transform = transforms.Compose(
                 [
                     transforms.ToPILImage(),
