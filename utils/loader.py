@@ -168,6 +168,49 @@ def get_loaders() -> tuple[DataLoader, DataLoader, DataLoader]:
     return train_loader, test_loader, valid_loader
 
 
+def get_test_loaders() -> DataLoader:
+    """
+    테스트용 로더
+    """
+    data_path = os.path.join(os.curdir, "test-data")
+
+    target_size = (224, 224)
+
+    images = []
+    labels = []
+
+    for dirname in os.listdir(data_path):
+        for filename in os.listdir(os.path.join(data_path, dirname)):
+            image_path = os.path.join(data_path, dirname, filename)
+            image = cv2.imread(image_path)
+            image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
+            image = cv2.resize(image, target_size)
+            images.append(image)
+
+            label = 0
+            if dirname == "dangerous":
+                label = 0
+            elif dirname == "distracted":
+                label = 1
+            elif dirname == "drinking":
+                label = 2 
+            elif dirname == "safe":
+                label = 3
+            elif dirname == "sleepy ":
+                label = 4
+            elif dirname == "yawn":
+                label = 5
+
+            labels.append(label)
+
+    images = np.array(images)
+    labels = np.array(labels)
+
+    dataset = CustomDataset(images, labels, 'test')
+
+    return DataLoader(dataset, shuffle=False)
+
+
 if __name__ == "__main__":
     train_loader, test_loader, valid_loader = get_loaders()
     print(train_loader)
